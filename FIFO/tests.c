@@ -3,174 +3,105 @@
 #include <assert.h>
 #include "dec.h"
 
+struct FIFO* add_elements ( struct FIFO* queue, int first_added_element, int first_element_in_queue, int quantity_of_callings ){
+  int i = first_added_element;
+  quantity_of_callings += i;
+  while ( i < quantity_of_callings ){
+    queue = push_back ( queue, i );
+    assert ( queue->begin->x == first_element_in_queue );
+    assert ( queue->end->x == i );
+    i++;
+  }
+  return queue;
+}
 
-void test() {
-  struct FIFO *queue = create_empty_FIFO ();
+struct FIFO* delete_elements ( struct FIFO* queue, int first_element_in_queue, int last_element_in_queue, int quantity_of_callings ){
+  int i = 0;
+  while ( i < quantity_of_callings ){
+    queue = pop_front ( queue );
+    if ( queue->begin == NULL )  assert ( queue->end == NULL );
+    else {
+      first_element_in_queue++;
+      assert ( queue->begin->x == first_element_in_queue );
+      assert ( queue->end->x == last_element_in_queue );
+    }
+    i++;
+  }
+  return queue;
+}
 
+void if_empty ( struct FIFO* queue ){
   assert ( queue->begin == NULL );
   assert ( queue->end == NULL );
-  queue = push_back ( queue, 1 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 1 );
-  queue = push_back ( queue, 2 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 2 );
-  queue = push_back ( queue, 3 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 3 );
-  queue = push_back ( queue, 4 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 4 );
-  queue = push_back ( queue, 5 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 5 );
+}
 
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 2 );
-  assert ( queue->end->x == 5 );
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 3 );
-  assert ( queue->end->x == 5 );
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 4 );
-  assert ( queue->end->x == 5 );
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 5 );
-  assert ( queue->end->x == 5 );
-  queue = pop_front ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
-  queue = pop_front ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
-  queue = pop_front ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
-
-
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
-  queue = push_back ( queue, 1 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 1 );
-  queue = push_back ( queue, 2 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 2 );
-  queue = push_back ( queue, 3 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 3 );
-  queue = push_back ( queue, 4 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 4 );
-  queue = push_back ( queue, 5 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 5 );
-
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 2 );
-  assert ( queue->end->x == 5 );
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 3 );
-  assert ( queue->end->x == 5 );
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 4 );
-  assert ( queue->end->x == 5 );
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 5 );
-  assert ( queue->end->x == 5 );
-
-  queue = push_back ( queue, 6 );
-  assert ( queue->begin->x == 5 );
-  assert ( queue->end->x == 6 );
-  queue = push_back ( queue, 7 );
-  assert ( queue->begin->x == 5 );
-  assert ( queue->end->x == 7 );
-  queue = push_back ( queue, 8 );
-  assert ( queue->begin->x == 5 );
-  assert ( queue->end->x == 8 );
-
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 6 );
-  assert ( queue->end->x == 8 );
-
-  queue = push_back ( queue, 9 );
-  assert ( queue->begin->x == 6 );
-  assert ( queue->end->x == 9 );
-  queue = push_back ( queue, 10 );
-  assert ( queue->begin->x == 6 );
-  assert ( queue->end->x == 10 );
+struct FIFO* delete_FIFO_and_check_if_empty ( struct FIFO *queue ) {
   queue = delete_FIFO ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
-  queue = delete_FIFO ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
-  queue = delete_FIFO ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
+  if_empty ( queue );
+  return queue;
+}
 
-  queue = push_back ( queue, 1 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 1 );
-  queue = push_back ( queue, 2 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 2 );
-  queue = push_back ( queue, 3 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 3 );
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 2 );
-  assert ( queue->end->x == 3 );
-  queue = delete_FIFO ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
 
-  queue = push_back ( queue, 1 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 1 );
-  queue = delete_FIFO ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
+void test1(){
+  struct FIFO *queue = create_empty_FIFO();
+  if_empty ( queue );
 
-  queue = push_back ( queue, 1 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 1 );
-  queue = push_back ( queue, 2 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 2 );
-  queue = delete_FIFO ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
+  queue = add_elements ( queue, 1, 1, 5 );
+  queue = delete_elements ( queue, 1, 5, 7 );
+  if_empty ( queue );
 
-  queue = push_back ( queue, 1 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 1 );
-  queue = push_back ( queue, 2 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 2 );
-  queue = push_back ( queue, 3 );
-  assert ( queue->begin->x == 1 );
-  assert ( queue->end->x == 3 );
-  queue = pop_front ( queue );
-  assert ( queue->begin->x == 2 );
-  assert ( queue->end->x == 3 );
-  queue = delete_FIFO ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
-  queue = delete_FIFO ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
-  queue = delete_FIFO ( queue );
-  assert ( queue->begin == NULL );
-  assert ( queue->end == NULL );
+  queue = add_elements ( queue, 1, 1, 5 );
+  queue = delete_elements ( queue, 1, 5, 4 );
+  queue = add_elements ( queue, 6, 5, 3 );
+  queue = delete_elements ( queue, 5, 8, 1 );
+  queue = add_elements ( queue, 9, 6, 2 );
+  queue = delete_FIFO_and_check_if_empty ( queue );
+  queue = delete_FIFO_and_check_if_empty ( queue );
+  queue = delete_FIFO_and_check_if_empty ( queue );
+
+  queue = add_elements ( queue, 1, 1, 3 );
+  queue = delete_elements ( queue, 1, 3, 1 );
+  queue = delete_FIFO_and_check_if_empty ( queue );
+
+  queue = add_elements ( queue, 1, 1, 1 );
+  queue = delete_FIFO_and_check_if_empty ( queue );
+
+  queue = add_elements ( queue, 1, 1, 2 );
+  queue = delete_FIFO_and_check_if_empty ( queue );
+
+  queue = add_elements ( queue, 1, 1, 3 );
+  queue = delete_elements ( queue, 1, 3, 1 );
+  queue = delete_FIFO_and_check_if_empty ( queue );
+  queue = delete_FIFO_and_check_if_empty ( queue );
+
+  free (queue);
+}
+
+void test2(){
+  struct FIFO *queue = create_empty_FIFO();
+  queue = delete_FIFO_and_check_if_empty ( queue );
+
+  queue = add_elements ( queue, 1, 1, 5 );
+  queue = delete_elements ( queue, 1, 5, 7 );
+  if_empty ( queue );
+
+  queue = add_elements ( queue, 1, 1, 5 );
+  queue = delete_elements ( queue, 1, 5, 4 );
+  queue = add_elements ( queue, 6, 5, 3 );
+  queue = delete_elements ( queue, 5, 8, 1 );
+  queue = add_elements ( queue, 9, 6, 2 );
+  queue = delete_FIFO_and_check_if_empty ( queue );
+  queue = delete_FIFO_and_check_if_empty ( queue );
 
   free (queue);
 }
 
 
 int main(){
-  printf ( "\nTEST\n\n" );
-  test();
+  printf ( "\nTEST_1\n\n" );
+  test1 ();
+  printf ( "\nTEST_2\n\n" );
+  test2 ();
 
   return 0;
 }
